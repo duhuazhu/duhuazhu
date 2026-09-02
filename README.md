@@ -20,10 +20,11 @@
 
 ## 🧭 About Me
 
-- 🔨 **现在在做：** AI 辅助开发的工作流工具 —— [BugPack](https://github.com/duhuazhu/BugPack) 把 Bug 截图直接变成 AI 可执行的修复指令，自带 MCP Server
-- 🗺️ **过去多年：** WebGIS / 三维可视化，Cesium + Vue / React，写过一批常用的 Cesium 工具库
-- 🛠️ **做工具的原则：** 一个工具只做一件事，本地优先，不依赖云端 —— [KindleDock](https://github.com/duhuazhu/KindleDock)、[office-dlp-unlocker](https://github.com/duhuazhu/office-dlp-unlocker) 都是这个思路
+- 💡 **想法的实践者：** 脑子里冒出来的点子，我习惯直接做成能跑的东西。[BugPack](https://github.com/duhuazhu/BugPack)、[KindleDock](https://github.com/duhuazhu/KindleDock)、[office-dlp-unlocker](https://github.com/duhuazhu/office-dlp-unlocker) 都是这么来的
+- 🗺️ **WebGIS / 三维可视化：** 多年一线开发经验，Cesium + Vue / React。坐标转换、图形绘制、地形压平这些坑趟过一遍，沉淀成了一批开源工具库
+- 🔨 **现在在做：** BugPack —— 从禅道 / Jira 一键导入 Bug，连截图附件一起拉过来，交给 AI 读上下文改代码，修完状态自动回写。自带 MCP Server
 - 🤖 **最近感兴趣：** 用 Agent Skills / MCP 把重复工作交给 AI 编程助手（Claude Code、Cursor、Windsurf …）
+- 🛠️ **做工具的原则：** 一个工具只做一件事，本地优先，数据不出本机
 - 🌱 **在学：** Rust + Tauri 桌面应用、Swift
 
 <br/>
@@ -43,8 +44,9 @@
         <img src="https://img.shields.io/badge/MCP-Server-8B5CF6?style=flat-square" alt="MCP" />
       </p>
       <p align="center">
-        30 秒把 Bug 截图打包成 AI 可直接执行的修复指令。<br/>
-        本地优先，内置 MCP Server，Claude Code / Cursor / Windsurf / Cline 可直接读取 Bug 上下文并自动修代码。
+        从禅道 / Jira / Linear / TAPD 一键导入 Bug，连截图附件一起拉过来，<br/>
+        也可以直接 Ctrl+V 粘贴截图标注。内置 MCP Server，<br/>
+        Claude Code / Cursor / Windsurf 读上下文改代码，修完状态自动回写。全程本地。
       </p>
     </td>
     <td width="50%" valign="top">
