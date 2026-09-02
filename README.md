@@ -1,7 +1,7 @@
 <div align="center">
 
 <a href="https://github.com/duhuazhu">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=26&duration=3500&pause=900&color=58A6FF&center=true&vCenter=true&width=640&lines=Hi%2C+I'm+duhuazhu+%F0%9F%91%8B;%E6%8A%8A%E9%87%8D%E5%A4%8D%E7%9A%84%E9%BA%BB%E7%83%A6%E4%BA%8B%E5%81%9A%E6%88%90%E9%A1%BA%E6%89%8B%E7%9A%84%E5%B0%8F%E5%B7%A5%E5%85%B7;BugPack+%C2%B7+KindleDock+%C2%B7+Cesium+%C2%B7+Agent+Skills" alt="duhuazhu" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=24&duration=3500&pause=900&color=58A6FF&center=true&vCenter=true&width=820&height=60&lines=Hi%2C+I'm+duhuazhu+%F0%9F%91%8B;%E6%8A%8A%E9%87%8D%E5%A4%8D%E7%9A%84%E9%BA%BB%E7%83%A6%E4%BA%8B%E5%81%9A%E6%88%90%E9%A1%BA%E6%89%8B%E7%9A%84%E5%B0%8F%E5%B7%A5%E5%85%B7;BugPack+%C2%B7+KindleDock+%C2%B7+Cesium+%C2%B7+Agent+Skills" alt="duhuazhu" />
 </a>
 
 <br/>
