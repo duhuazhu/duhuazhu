@@ -127,12 +127,30 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api?username=duhuazhu&show_icons=true&theme=github_dark&hide_border=true&bg_color=00000000&include_all_commits=true&count_private=true" />
-  <img height="165" src="https://github-readme-stats.vercel.app/api?username=duhuazhu&show_icons=true&theme=default&hide_border=true&bg_color=00000000&include_all_commits=true&count_private=true" alt="GitHub stats" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=duhuazhu&theme=github_dark" />
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=duhuazhu&theme=github" alt="Profile details" width="820" />
+</picture>
+
+<br/>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=duhuazhu&theme=github_dark" />
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=duhuazhu&theme=github" alt="Repos per language" height="200" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=duhuazhu&layout=compact&theme=github_dark&hide_border=true&bg_color=00000000&langs_count=8" />
-  <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=duhuazhu&layout=compact&theme=default&hide_border=true&bg_color=00000000&langs_count=8" alt="Top languages" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=duhuazhu&theme=github_dark" />
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=duhuazhu&theme=github" alt="Most commit language" height="200" />
+</picture>
+
+<br/>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=duhuazhu&theme=github_dark" />
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=duhuazhu&theme=github" alt="Stats" height="200" />
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=duhuazhu&theme=github_dark&utcOffset=8" />
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=duhuazhu&theme=github&utcOffset=8" alt="Productive time" height="200" />
 </picture>
 
 <br/>
