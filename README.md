@@ -11,6 +11,10 @@
 
 <br/><br/>
 
+<img src="assets/stats.svg" width="100%" alt="统计与贡献日历" />
+
+<br/><br/>
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/duhuazhu/duhuazhu/output/github-snake-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/duhuazhu/duhuazhu/output/github-snake.svg" />
