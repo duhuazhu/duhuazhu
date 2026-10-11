@@ -22,13 +22,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 - assets/stats.svg <<'PY'
+          python3 - assets <<'PY'
           import json, os, subprocess, sys, urllib.request
           from datetime import date
 
           USER = 'duhuazhu'
-          OUT = sys.argv[1] if len(sys.argv) > 1 else 'assets/stats.svg'
-          WEEKS = 30
+          OUT_DIR = sys.argv[1] if len(sys.argv) > 1 else 'assets'
 
           token = os.environ.get('GH_TOKEN')
           if not token:
@@ -37,10 +36,11 @@ jobs:
           QUERY = '''
           query($login:String!){
             user(login:$login){
+              createdAt
               followers{totalCount}
               all:repositories(privacy:PUBLIC, ownerAffiliations:OWNER){totalCount}
               own:repositories(privacy:PUBLIC, ownerAffiliations:OWNER, isFork:false, first:100){
-                nodes{stargazerCount primaryLanguage{name color}}
+                nodes{name stargazerCount primaryLanguage{name color}}
               }
               contributionsCollection{contributionCalendar{totalContributions weeks{contributionDays{contributionCount date}}}}
             }
@@ -54,9 +54,13 @@ jobs:
               sys.exit('GraphQL 错误: ' + json.dumps(data['errors'], ensure_ascii=False))
           u = data['data']['user']
 
+          nodes = u['own']['nodes']
           repos_total = u['all']['totalCount']
-          stars = sum(n['stargazerCount'] for n in u['own']['nodes'])
+          stars = sum(n['stargazerCount'] for n in nodes)
           followers = u['followers']['totalCount']
+          gis_repos = sum(1 for n in nodes if 'cesium' in n['name'].lower())
+          bug_stars = next((n['stargazerCount'] for n in nodes if n['name'].lower() == 'bugpack'), 0)
+          years = max(date.today().year - int(u['createdAt'][:4]), 1)
           cal = u['contributionsCollection']['contributionCalendar']
           weeks = [[d['contributionCount'] for d in w['contributionDays']] for w in cal['weeks']]
           flat = [c for w in weeks for c in w]
@@ -68,7 +72,7 @@ jobs:
               longest = max(longest, run)
 
           langs = {}
-          for n in u['own']['nodes']:
+          for n in nodes:
               pl = n['primaryLanguage']
               if pl:
                   item = langs.setdefault(pl['name'], [0, pl['color'] or '#8b949e'])
@@ -78,93 +82,148 @@ jobs:
 
           MONO = "'JetBrains Mono','SFMono-Regular',Consolas,'Courier New',monospace"
           SANS = "'Noto Sans SC','PingFang SC','Microsoft YaHei',-apple-system,'Segoe UI',sans-serif"
-          TOPS = ['#2b333d', '#0e4429', '#006d32', '#26a641', '#39d353']
-          LEFTS = ['#1f262e', '#0a2e1c', '#004a22', '#1a7430', '#28a23a']
-          RIGHTS = ['#343d48', '#0c3a23', '#005a2a', '#1f8c38', '#2fba45']
+          TOPS = ['#252d36', '#0e4429', '#006d32', '#26a641', '#39d353']
+          LEFTS = ['#1a2028', '#0a2e1c', '#004a22', '#1a7430', '#28a23a']
+          RIGHTS = ['#2e3742', '#0c3a23', '#005a2a', '#1f8c38', '#2fba45']
           W = 1012
-          parts = []
 
-          # 统计条
+
+          def card(x, y, w, h):
+              return f'<rect x="{x + .5}" y="{y + .5}" width="{w - 1}" height="{h - 1}" rx="12" fill="#161b22" stroke="#30363d"/>'
+
+
+          def title(x, y, s):
+              return f'<text x="{x}" y="{y}" fill="#e6edf3" font-family="{SANS}" font-size="17" font-weight="700">{s}</text>'
+
+
+          def wrap(parts, h, label):
+              return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{h:.0f}" viewBox="0 0 {W} {h:.0f}" role="img" aria-label="{label}">'
+                      + ''.join(parts) + '</svg>\n')
+
+
+          def save(name, svg):
+              os.makedirs(OUT_DIR, exist_ok=True)
+              with open(os.path.join(OUT_DIR, name), 'w', encoding='utf-8', newline='\n') as f:
+                  f.write(svg)
+
+
+          # ======== 上半：统计条 + 等距贡献日历 ========
+          top = []
           kpis = [(str(repos_total), '公开仓库', '#39d353'), (str(stars), '获得 Star', '#e3b341'),
-                  (str(followers), '粉丝', '#e6edf3'), (f'{total:,}', '近一年提交', '#39d353'),
+                  (str(followers), '粉丝', '#e6edf3'), (f'{total:,}', '近一年贡献', '#39d353'),
                   (str(longest), '最长连续天', '#e6edf3'), (str(best), '单日最高', '#e6edf3')]
           gap = 12
           bw = (W - gap * 5) / 6
           for i, (v, l, c) in enumerate(kpis):
               x = i * (bw + gap)
-              parts.append(f'<rect x="{x + .5:.1f}" y=".5" width="{bw - 1:.1f}" height="55" rx="10" fill="#161b22" stroke="#30363d"/>')
-              parts.append(
-                  f'<text x="{x + bw / 2:.1f}" y="35" text-anchor="middle"><tspan font-family="{MONO}" font-size="22" font-weight="700" fill="{c}">{v}</tspan>'
-                  f'<tspan dx="7" font-family="{SANS}" font-size="12.5" fill="#8b949e">{l}</tspan></text>')
+              top.append(f'<rect x="{x + .5:.1f}" y=".5" width="{bw - 1:.1f}" height="59" rx="10" fill="#161b22" stroke="#30363d"/>')
+              top.append(
+                  f'<text x="{x + bw / 2:.1f}" y="38" text-anchor="middle"><tspan font-family="{MONO}" font-size="24" font-weight="700" fill="{c}">{v}</tspan>'
+                  f'<tspan dx="7" font-family="{SANS}" font-size="13.5" fill="#8b949e">{l}</tspan></text>')
 
-          # 等距贡献日历
-          shown = weeks[-WEEKS:]
-          vals = sorted(c for w in shown for c in w if c > 0)
-          def level(c):
-              if c == 0 or not vals:
-                  return 0
-              q = [vals[int(len(vals) * p)] for p in (0.25, 0.5, 0.75)] if len(vals) >= 4 else [1, 2, 3]
-              return 1 if c <= q[0] else 2 if c <= q[1] else 3 if c <= q[2] else 4
-          mx = max(vals) if vals else 1
-          cw, ch = 17, 8.5
-          ox, oy = 7 * cw, 64
-          cal_top = 72
-          cal_h = oy + (WEEKS + 6) * ch + 2 * ch + 36
+          n_weeks = len(weeks)
+          cw, ch = 13, 5.2
+          ox, oy = 7 * cw, 84
+          mx = max(flat) if flat else 1
+
+
+          def lv_of(c):
+              return 0 if c == 0 else 2 if c == 1 else 3 if c <= 3 else 4
+
+
+          def height_of(c):
+              return 1.5 if c == 0 else 14 + (c / mx) ** 0.6 * 60
+
+
+          def pts(a):
+              return ' '.join(f'{x:.1f},{y:.1f}' for x, y in a)
+
+
           bars = []
-          for i, w in enumerate(shown):
+          for i, w in enumerate(weeks):
               for j, c in enumerate(w):
-                  lv = level(c)
-                  h = 2 if c == 0 else 6 + (c / mx) ** 0.7 * 52
+                  lv, h = lv_of(c), height_of(c)
                   px, py = ox + (i - j) * cw, oy + (i + j) * ch
-                  def P(a):
-                      return ' '.join(f'{x:.1f},{y:.1f}' for x, y in a)
-                  bars.append((i + j,
-                               P([(px, py - h), (px + cw, py + ch - h), (px, py + 2 * ch - h), (px - cw, py + ch - h)]),
-                               P([(px - cw, py + ch - h), (px, py + 2 * ch - h), (px, py + 2 * ch), (px - cw, py + ch)]),
-                               P([(px, py + 2 * ch - h), (px + cw, py + ch - h), (px + cw, py + ch), (px, py + 2 * ch)]), lv))
+                  bars.append((i + j, pts([(px, py - h), (px + cw, py + ch - h), (px, py + 2 * ch - h), (px - cw, py + ch - h)]),
+                               pts([(px - cw, py + ch - h), (px, py + 2 * ch - h), (px, py + 2 * ch), (px - cw, py + ch)]),
+                               pts([(px, py + 2 * ch - h), (px + cw, py + ch - h), (px + cw, py + ch), (px, py + 2 * ch)]), lv))
           bars.sort(key=lambda b: b[0])
-          iso_w = (WEEKS + 6) * cw + cw
-          shift = (W - iso_w) / 2 - 0
-          parts.append(f'<rect x=".5" y="{cal_top + .5}" width="{W - 1}" height="{cal_h - 1:.1f}" rx="12" fill="#161b22" stroke="#30363d"/>')
-          parts.append(f'<text x="28" y="{cal_top + 34}" fill="#e6edf3" font-family="{SANS}" font-size="16" font-weight="700">贡献日历</text>')
-          parts.append(f'<g transform="translate({shift:.1f},{cal_top + 20})">')
-          for _, top, left, right, lv in bars:
-              parts.append(f'<polygon points="{left}" fill="{LEFTS[lv]}"/><polygon points="{right}" fill="{RIGHTS[lv]}"/><polygon points="{top}" fill="{TOPS[lv]}"/>')
-          parts.append('</g>')
+          iso_w = (n_weeks + 6) * cw + cw
+          shift = (W - iso_w) / 2
+          cal_top = 76
+          cal_h = 24 + oy + (n_weeks + 5) * ch + 2 * ch + 52
+          top.append(card(0, cal_top, W, cal_h))
+          top.append(title(28, cal_top + 36, '贡献日历'))
+          top.append(f'<text x="{W - 28}" y="{cal_top + 36}" text-anchor="end" fill="#8b949e" font-family="{SANS}" font-size="13">近一年 {total} 次贡献</text>')
+          top.append(f'<g transform="translate({shift:.1f},{cal_top + 24})">')
+          for _, t, l, r, lv in bars:
+              top.append(f'<polygon points="{l}" fill="{LEFTS[lv]}"/><polygon points="{r}" fill="{RIGHTS[lv]}"/><polygon points="{t}" fill="{TOPS[lv]}"/>')
+          top.append('</g>')
+          ly = cal_top + cal_h - 24
+          top.append(f'<text x="{W - 150}" y="{ly + 4}" text-anchor="end" fill="#6e7681" font-family="{SANS}" font-size="12">少</text>')
+          for k, lv in enumerate([0, 2, 3, 4]):
+              top.append(f'<rect x="{W - 140 + k * 20}" y="{ly - 6}" width="14" height="14" rx="3" fill="{TOPS[lv]}"/>')
+          top.append(f'<text x="{W - 52}" y="{ly + 4}" fill="#6e7681" font-family="{SANS}" font-size="12">多</text>')
+          save('stats-top.svg', wrap(top, cal_top + cal_h, '统计与贡献日历'))
 
-          # 语言
-          lang_top = cal_top + cal_h + 16
-          parts.append(f'<rect x=".5" y="{lang_top + .5}" width="{W - 1}" height="{{LH}}" rx="12" fill="#161b22" stroke="#30363d"/>')
-          parts.append(f'<text x="28" y="{lang_top + 36}" fill="#e6edf3" font-family="{SANS}" font-size="16" font-weight="700">常用语言</text>')
-          parts.append(f'<text x="{W - 28}" y="{lang_top + 36}" text-anchor="end" fill="#6e7681" font-family="{SANS}" font-size="12">按仓库数统计</text>')
-          bx, bwid = 28, W - 56
-          parts.append(f'<clipPath id="lc"><rect x="{bx}" y="{lang_top + 52}" width="{bwid}" height="12" rx="6"/></clipPath><g clip-path="url(#lc)">')
+          # ======== 下半：语言 + 方向 + 成就 ========
+          mid = []
+          LW, FW, ROW_H = 600, 400, 200
+          mid.append(card(0, 0, LW, ROW_H))
+          mid.append(title(28, 38, '常用语言'))
+          mid.append(f'<text x="{LW - 28}" y="38" text-anchor="end" fill="#6e7681" font-family="{SANS}" font-size="12.5">按仓库数统计</text>')
+          bx, bwid = 28, LW - 56
+          mid.append(f'<clipPath id="lc"><rect x="{bx}" y="56" width="{bwid}" height="14" rx="7"/></clipPath><g clip-path="url(#lc)">')
           x = bx
           for name, (n, color) in lang_list:
               w = bwid * n / lang_total
-              parts.append(f'<rect x="{x:.1f}" y="{lang_top + 52}" width="{max(w - 2, 1):.1f}" height="12" fill="{color}"/>')
+              mid.append(f'<rect x="{x:.1f}" y="56" width="{max(w - 2, 1):.1f}" height="14" fill="{color}"/>')
               x += w
-          parts.append('</g>')
-          colw = (W - 56) / 3
+          mid.append('</g>')
+          colw = (LW - 56) / 2
           for k, (name, (n, color)) in enumerate(lang_list):
-              cx, cy = 28 + (k % 3) * colw, lang_top + 92 + (k // 3) * 28
-              parts.append(f'<circle cx="{cx + 5:.1f}" cy="{cy - 4}" r="5" fill="{color}"/>')
-              parts.append(f'<text x="{cx + 18:.1f}" y="{cy}" fill="#c9d1d9" font-family="{SANS}" font-size="13">{name}</text>')
-              parts.append(f'<text x="{cx + colw - 24:.1f}" y="{cy}" text-anchor="end" fill="#8b949e" font-family="{MONO}" font-size="12">{n / lang_total * 100:.1f}%</text>')
-          rows = (len(lang_list) + 2) // 3
-          LH = 92 + rows * 28 + 8 - 18
-          total_h = lang_top + LH + 4
-          svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{total_h:.0f}" viewBox="0 0 {W} {total_h:.0f}" role="img" aria-label="GitHub 统计">'
-                 + ''.join(parts).replace('{LH}', f'{LH - 1}') + '</svg>\n')
-          os.makedirs(os.path.dirname(OUT) or '.', exist_ok=True)
-          with open(OUT, 'w', encoding='utf-8', newline='\n') as f:
-              f.write(svg)
-          print(f'ok repos={repos_total} stars={stars} followers={followers} total={total} longest={longest} best={best} langs={len(lang_list)}')
+              cx, cy = 28 + (k % 2) * colw, 104 + (k // 2) * 30
+              mid.append(f'<circle cx="{cx + 5:.1f}" cy="{cy - 5}" r="5.5" fill="{color}"/>')
+              mid.append(f'<text x="{cx + 20:.1f}" y="{cy}" fill="#c9d1d9" font-family="{SANS}" font-size="14">{name}</text>')
+              mid.append(f'<text x="{cx + colw - 28:.1f}" y="{cy}" text-anchor="end" fill="#8b949e" font-family="{MONO}" font-size="13">{n / lang_total * 100:.1f}%</text>')
+
+          fx = LW + 12
+          mid.append(card(fx, 0, FW, ROW_H))
+          mid.append(title(fx + 28, 38, '方向'))
+          focus = [('WebGIS / Cesium', f'{gis_repos} 个仓库', gis_repos / max(len(nodes), 1) * 1.6, '#39d353'),
+                   ('AI 工具 / MCP', 'BugPack', 0.58, '#58a6ff'),
+                   ('桌面应用', 'KindleDock', 0.26, '#e3b341')]
+          for k, (nm, note, ratio, color) in enumerate(focus):
+              fy = 78 + k * 40
+              bwid2 = FW - 56
+              mid.append(f'<text x="{fx + 28}" y="{fy}" fill="#c9d1d9" font-family="{SANS}" font-size="14">{nm}</text>')
+              mid.append(f'<text x="{fx + FW - 28}" y="{fy}" text-anchor="end" fill="#8b949e" font-family="{SANS}" font-size="13">{note}</text>')
+              mid.append(f'<rect x="{fx + 28}" y="{fy + 10}" width="{bwid2}" height="7" rx="3.5" fill="#21262d"/>')
+              mid.append(f'<rect x="{fx + 28}" y="{fy + 10}" width="{bwid2 * min(ratio, 1):.1f}" height="7" rx="3.5" fill="{color}"/>')
+
+          ay = ROW_H + 16
+          AH = 116
+          mid.append(card(0, ay, W, AH))
+          mid.append(title(28, ay + 38, '成就'))
+          badges = [(str(bug_stars), f'BugPack {bug_stars} Star', '开源项目', '#e3b341', '#33290f'),
+                    ('npm', 'npm 已发布', 'bugpack-mcp', '#79c0ff', '#0c2d6b'),
+                    ('GIS', 'Cesium 工具库', f'{gis_repos} 个相关仓库', '#56d364', '#0e2a18'),
+                    (f'{years}y', f'{u["createdAt"][:4]} 年加入', f'{years} 年 GitHub 用户', '#c9d1d9', '#21262d')]
+          bw4 = (W - 56) / 4
+          for k, (mark, t1, t2, color, fill) in enumerate(badges):
+              bx0 = 28 + k * bw4
+              mid.append(f'<g transform="translate({bx0:.1f},{ay + 52})"><polygon points="23,2 43,13 43,39 23,50 3,39 3,13" fill="{fill}" stroke="{color}" stroke-width="2"/>'
+                         f'<text x="23" y="32" text-anchor="middle" font-family="{MONO}" font-size="14" font-weight="700" fill="{color}">{mark}</text></g>')
+              mid.append(f'<text x="{bx0 + 58:.1f}" y="{ay + 72}" fill="#e6edf3" font-family="{SANS}" font-size="14" font-weight="600">{t1}</text>')
+              mid.append(f'<text x="{bx0 + 58:.1f}" y="{ay + 94}" fill="#8b949e" font-family="{SANS}" font-size="12.5">{t2}</text>')
+          save('stats-mid.svg', wrap(mid, ay + AH, '语言、方向与成就'))
+
+          print(f'ok repos={repos_total} stars={stars} followers={followers} total={total} longest={longest} best={best} gis={gis_repos} weeks={n_weeks}')
           PY
 
       - name: 提交变更
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/stats.svg
+          git add assets/stats-top.svg assets/stats-mid.svg
           git diff --cached --quiet || (git commit -m "chore: 更新统计图" && git push)

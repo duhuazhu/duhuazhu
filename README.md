@@ -11,7 +11,7 @@
 
 <br/><br/>
 
-<img src="assets/stats.svg" width="100%" alt="统计与贡献日历" />
+<img src="assets/stats-top.svg" width="100%" alt="统计与贡献日历" />
 
 <br/><br/>
 
@@ -20,6 +20,10 @@
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/duhuazhu/duhuazhu/output/github-snake.svg" />
   <img alt="贡献贪吃蛇" src="https://raw.githubusercontent.com/duhuazhu/duhuazhu/output/github-snake-dark.svg" />
 </picture>
+
+<br/><br/>
+
+<img src="assets/stats-mid.svg" width="100%" alt="语言、方向与成就" />
 
 <br/><br/>
 
