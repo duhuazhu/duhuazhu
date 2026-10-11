@@ -11,10 +11,6 @@
 
 <br/><br/>
 
-<img src="assets/metrics.svg" width="100%" alt="贡献日历与语言统计" />
-
-<br/><br/>
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/duhuazhu/duhuazhu/output/github-snake-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/duhuazhu/duhuazhu/output/github-snake.svg" />
