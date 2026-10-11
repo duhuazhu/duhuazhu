@@ -16,9 +16,9 @@
 <br/><br/>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/duhuazhu/duhuazhu/output/github-snake-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/duhuazhu/duhuazhu/output/github-snake.svg" />
-  <img alt="贡献贪吃蛇" src="https://raw.githubusercontent.com/duhuazhu/duhuazhu/output/github-snake-dark.svg" />
+  <source media="(prefers-color-scheme: dark)" srcset="assets/snake-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="assets/snake.svg" />
+  <img alt="贡献贪吃蛇" src="assets/snake-dark.svg" />
 </picture>
 
 <br/><br/>
