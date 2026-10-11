@@ -1,0 +1,35 @@
+name: Metrics
+
+on:
+  schedule:
+    - cron: "0 18 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+    env:
+      HAS_TOKEN: ${{ secrets.METRICS_TOKEN }}
+    steps:
+      - name: 缺少 METRICS_TOKEN 时跳过
+        if: env.HAS_TOKEN == ''
+        run: echo "未配置 METRICS_TOKEN，跳过生成"
+
+      - uses: lowlighter/metrics@latest
+        if: env.HAS_TOKEN != ''
+        with:
+          token: ${{ secrets.METRICS_TOKEN }}
+          user: duhuazhu
+          filename: assets/metrics.svg
+          template: classic
+          base: header, repositories
+          config_timezone: Asia/Shanghai
+          committer_message: "chore: 更新 metrics"
+          plugin_isocalendar: yes
+          plugin_isocalendar_duration: full-year
+          plugin_languages: yes
+          plugin_languages_sections: most-used
+          plugin_languages_details: percentage

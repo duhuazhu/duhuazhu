@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1012" height="166" viewBox="0 0 1012 166" role="img" aria-label="now">
+<rect x=".5" y=".5" width="1011" height="165" rx="12" fill="#0a1115" stroke="#30363d"/>
+<path d="M1 12.5a11.5 11.5 0 0 1 11.5-11.5h987a11.5 11.5 0 0 1 11.5 11.5V38H1z" fill="#0f171c"/>
+<g fill="#3b4850"><circle cx="22" cy="20" r="4.5"/><circle cx="38" cy="20" r="4.5"/><circle cx="54" cy="20" r="4.5"/></g>
+<text x="72" y="24" fill="#6b7c85" font-family="'JetBrains Mono','SFMono-Regular',Consolas,'Courier New',monospace" font-size="12">now.sh</text>
+<text x="22" y="80" font-family="'JetBrains Mono','SFMono-Regular',Consolas,'Courier New',monospace" font-size="13"><tspan fill="#39d353">$</tspan><tspan fill="#c9d1d9" dx="8">now --building</tspan></text><text x="22" y="104" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',-apple-system,'Segoe UI',sans-serif" font-size="13" fill="#e3b341">BugPack  缺陷截图转 AI 修复指令</text><text x="22" y="128" font-family="'JetBrains Mono','SFMono-Regular',Consolas,'Courier New',monospace" font-size="13"><tspan fill="#39d353">$</tspan><tspan fill="#c9d1d9" dx="8">now --exploring</tspan></text><text x="22" y="152" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',-apple-system,'Segoe UI',sans-serif" font-size="13" fill="#8b949e">Cesium 3D Tiles / MCP / Agent Skills</text>
+</svg>

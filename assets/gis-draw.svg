@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="494" height="230" viewBox="0 0 494 230" role="img" aria-label="CesiumDraw">
+<rect x=".5" y=".5" width="493" height="229" rx="12" fill="#161b22" stroke="#30363d"/>
+<clipPath id="c"><rect x="1" y="1" width="492" height="118" rx="11"/></clipPath>
+<g clip-path="url(#c)"><rect x="1" y="1" width="492" height="118" fill="#0a1418"/>
+<g transform="translate(117,9)"><polygon points="40,70 90,20 170,30 220,72 130,86" fill="#39d353" fill-opacity=".15" stroke="#39d353" stroke-width="1.6"/><g fill="#0d1117" stroke="#e3b341" stroke-width="1.6"><circle cx="40" cy="70" r="5"/><circle cx="90" cy="20" r="5"/><circle cx="170" cy="30" r="5"/><circle cx="220" cy="72" r="5"/><circle cx="130" cy="86" r="5"/></g></g></g>
+<line x1="1" y1="119" x2="493" y2="119" stroke="#1c2a31"/>
+<text x="22" y="150" fill="#58a6ff" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',-apple-system,'Segoe UI',sans-serif" font-size="15" font-weight="600">CesiumDraw</text>
+<text x="22" y="178" fill="#8b949e" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',-apple-system,'Segoe UI',sans-serif" font-size="13">绘制点、线、多边形，交互简单，可直接拷进业务里</text>
+<circle cx="27" cy="208" r="5" fill="#f1e05a"/>
+<text x="38" y="212" fill="#8b949e" font-family="'JetBrains Mono','SFMono-Regular',Consolas,'Courier New',monospace" font-size="12">JavaScript</text>
+</svg>

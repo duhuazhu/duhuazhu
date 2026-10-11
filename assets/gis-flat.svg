@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="494" height="230" viewBox="0 0 494 230" role="img" aria-label="cesiumSimpleFlat">
+<rect x=".5" y=".5" width="493" height="229" rx="12" fill="#161b22" stroke="#30363d"/>
+<clipPath id="c"><rect x="1" y="1" width="492" height="118" rx="11"/></clipPath>
+<g clip-path="url(#c)"><rect x="1" y="1" width="492" height="118" fill="#0a1418"/>
+<g transform="translate(117,9)"><path d="M10 70 L60 40 L100 58 L130 30 L170 56 L210 36 L250 62" fill="none" stroke="#39d353" stroke-opacity=".45" stroke-width="1.6"/><path d="M10 70 L60 40 L90 62 L170 62 L210 36 L250 62" fill="none" stroke="#e3b341" stroke-width="1.8" stroke-dasharray="5 4"/><rect x="90" y="62" width="80" height="14" fill="#e3b341" fill-opacity=".2" stroke="#e3b341"/></g></g>
+<line x1="1" y1="119" x2="493" y2="119" stroke="#1c2a31"/>
+<text x="22" y="150" fill="#58a6ff" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',-apple-system,'Segoe UI',sans-serif" font-size="15" font-weight="600">cesiumSimpleFlat</text>
+<text x="22" y="178" fill="#8b949e" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',-apple-system,'Segoe UI',sans-serif" font-size="13">点击压平的基础简易实现，适合三维模型与地形场景</text>
+<circle cx="27" cy="208" r="5" fill="#f1e05a"/>
+<text x="38" y="212" fill="#8b949e" font-family="'JetBrains Mono','SFMono-Regular',Consolas,'Courier New',monospace" font-size="12">JavaScript</text>
+</svg>
